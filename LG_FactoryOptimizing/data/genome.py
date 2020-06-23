@@ -2,7 +2,8 @@ import os
 import pandas as pd
 import numpy as np
 from pathlib import Path
-from data.simulator import Simulator
+from data.new_simulator import Simulator
+
 simulator = Simulator()
 submission_ini = pd.read_csv(os.path.join(Path(__file__).resolve().parent, 'sample_submission.csv'))
 order_ini = pd.read_csv(os.path.join(Path(__file__).resolve().parent, 'order.csv'))
@@ -84,7 +85,7 @@ class Genome():
         return np.exp(x) / np.sum(np.exp(x), axis=0)
     
     def linear(self, x):
-        return x
+        return x / np.max(x)
     
     def leakyReLU(self, x):
         return np.maximum(0.01*x, x)
