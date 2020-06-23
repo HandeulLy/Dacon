@@ -2,9 +2,9 @@ import os
 import pandas as pd
 import numpy as np
 from pathlib import Path
-from data.simulator import Simulator
+from simulator import Simulator
 simulator = Simulator()
-submission_ini = pd.read_csv(os.path.join(Path(__file__).resolve().parent, 'sample_submission.csv'))
+submission_ini = pd.read_csv(os.path.join(Path(__file__).resolve().parent, 'submission.csv'))
 order_ini = pd.read_csv(os.path.join(Path(__file__).resolve().parent, 'order.csv'))
 
 class Genome():
@@ -84,10 +84,7 @@ class Genome():
         return np.exp(x) / np.sum(np.exp(x), axis=0)
     
     def linear(self, x):
-        return x
-    
-    def leakyReLU(self, x):
-        return np.maximum(0.01*x, x)
+        return x / np.max(x)
     
     def create_order(self, order):
         for i in range(30):
@@ -98,15 +95,13 @@ class Genome():
         order = self.create_order(order)
         self.submission = submission_ini
         self.submission.loc[:, 'PRT_1':'PRT_4'] = 0
-        change_time, change_point = 0, 0
-        
+        change_time,change_point =0,0
         for s in range(self.submission.shape[0]):
             self.update_mask()
             inputs = np.array(order.loc[s//24:(s//24+30), 'BLK_1':'BLK_4']).reshape(-1)
             inputs = np.append(inputs, s%24)
             out1, out2 = self.forward(inputs)
             nextout = ''
-            
             if out1 == 'CHECK_1' and out1 != nextout:
                 if self.process == 1:
                     self.process = 0
@@ -162,13 +157,12 @@ class Genome():
                 if self.process_time == 140:
                     self.process = 0
                     self.check_time = 28
-
             self.submission.loc[s, 'Event_A'] = out1
             if self.submission.loc[s, 'Event_A'] == 'PROCESS':
                 self.submission.loc[s, 'MOL_A'] = out2
             else:
                 self.submission.loc[s, 'MOL_A'] = 0
-                
+        nextout = out1
         # 23일간 MOL = 0
         self.submission.loc[:24*23, 'MOL_A'] = 0
         
@@ -182,10 +176,10 @@ class Genome():
         self.process_mode = 0
         self.process_time = 0
         
-        return self.submission    
+        return self.submission, change_time    
     
 def genome_score(genome):
-    submission = genome.predict(order_ini)    
+    submission,_ = genome.predict(order_ini)    
     genome.submission = submission    
     genome.score, _ = simulator.get_score(submission)    
     return genome

@@ -1,5 +1,3 @@
-# HDLY
-
 import os
 import pandas as pd
 import numpy as np
@@ -40,7 +38,7 @@ class Simulator:
                 for column in columns:
                     set_num = df_set.loc[time, column]
                     if set_num > 0:
-                        out_num = np.sum( np.random.choice( 2, int(set_num), replace=True, p=[1-p, p] ) )
+                        out_num = np.sum(np.random.choice(2, set_num, p=[1-p, p]))         
                         df_out.loc[out_time, column] = out_num
 
         df_out['MOL_1'] = 0.0
@@ -172,6 +170,15 @@ class Simulator:
         df_rescale = df_rescale.fillna(0)
         return df_rescale
 
+#     def cal_score(self, blk_diffs):
+#         # Block Order Difference
+#         blk_diff_m = 0
+#         for item in blk_diffs:
+#             if item < 0:
+#                 blk_diff_m = blk_diff_m + abs(item)
+#         score = blk_diff_m
+#         return score
+
     def cal_score(self, blk_diffs):
         # Block Order Difference
         blk_diff_m = 0
@@ -183,7 +190,9 @@ class Simulator:
                 blk_diff_p = blk_diff_p + abs(item)
         score = blk_diff_m + blk_diff_p
         return score
-    
+
+
+
     def get_score(self, df):
         df = self.subprocess(df) 
         out_1 = self.cal_schedule_part_1(df)
