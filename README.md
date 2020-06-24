@@ -47,6 +47,31 @@
 
 <h3>My History of Competitions</h3>
 
+Abstract.
+<table>
+    <tr>
+        <th width=5%>No.</th>
+        <th>Competition.</th>
+        <th>Rank.</th>
+        <th width=5%>Progress.</th>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>공공 데이터 활용 온도 추정 AI 경진대회</td>
+        <td>45 / 375</td>
+        <td>Done</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>블럭 장난감 제조 공정 최적화 AI경진대회</td>
+        <td>19 / 575<br>(as of 24th June)</td>
+        <td>On going</td>
+    </tr>
+</table>
+
+<br>
+
+
 <ol>
     <li>공공 데이터 활용 온도 추정 AI 경진대회</li>
     <ul>

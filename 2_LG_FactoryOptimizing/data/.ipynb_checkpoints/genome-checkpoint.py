@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import numpy as np
 from pathlib import Path
-from data.new_simulator import Simulator
+from data.simulator import Simulator
 
 simulator = Simulator()
 submission_ini = pd.read_csv(os.path.join(Path(__file__).resolve().parent, 'sample_submission.csv'))
@@ -56,7 +56,7 @@ class Genome():
         net = np.matmul(inputs, self.w1)
         net = self.linear(net)
         net = np.matmul(net, self.w2)
-        net = self.linear(net)
+        net = self.leakyReLU(net)
         net = np.matmul(net, self.w3)
         net = self.sigmoid(net)
         net = np.matmul(net, self.w4)
@@ -69,7 +69,7 @@ class Genome():
         net = np.matmul(inputs, self.w5)
         net = self.linear(net)
         net = np.matmul(net, self.w6)
-        net = self.linear(net)
+        net = self.leakyReLU(net)
         net = np.matmul(net, self.w7)
         net = self.sigmoid(net)
         net = np.matmul(net, self.w8)
