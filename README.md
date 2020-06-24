@@ -47,7 +47,8 @@
 
 <h3>My History of Competitions</h3>
 
-Abstract.
+<b>Abstract.</b>
+
 <table>
     <tr>
         <th width=5%>No.</th>
@@ -68,8 +69,9 @@ Abstract.
         <td>On going</td>
     </tr>
 </table>
-
 <br>
+
+<b>Details.</b>
 
 
 <ol>
