@@ -47,16 +47,16 @@ class Simulator:
         df_out['MOL_2'] = 0.0
         df_out['MOL_3'] = 0.0
         df_out['MOL_4'] = 0.0
+        
         df_out['BLK_1'] = 0.0
         df_out['BLK_2'] = 0.0
         df_out['BLK_3'] = 0.0
         df_out['BLK_4'] = 0.0
+        
         return df_out    
     
     def cal_schedule_part_2(self, df, line='A'):
-        if line == 'A':
-            columns = ['Event_A', 'MOL_A']
-        elif line == 'B':
+        if line == 'B':
             columns = ['Event_B', 'MOL_B']
         else:
             columns = ['Event_A', 'MOL_A']
@@ -70,10 +70,12 @@ class Simulator:
         
         schedule_process = schedule.loc[schedule[columns[0]]=='PROCESS']
         df_out = schedule.drop(schedule.columns, axis=1)
+        
         df_out['PRT_1'] = 0.0
         df_out['PRT_2'] = 0.0
         df_out['PRT_3'] = 0.0
         df_out['PRT_4'] = 0.0
+        
         df_out['MOL_1'] = 0.0
         df_out['MOL_2'] = 0.0
         df_out['MOL_3'] = 0.0
@@ -93,6 +95,7 @@ class Simulator:
         df_out['BLK_2'] = 0.0
         df_out['BLK_3'] = 0.0
         df_out['BLK_4'] = 0.0
+        
         return df_out
 
     def cal_stock(self, df, df_order):

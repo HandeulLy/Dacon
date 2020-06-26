@@ -58,21 +58,21 @@
     </tr>
     <tr>
         <td>1</td>
-        <td>공공 데이터 활용 온도 추정 AI 경진대회</td>
+        <td><a href="https://dacon.io/competitions/official/235584/overview/">공공 데이터 활용 온도 추정 AI 경진대회</a></td>
         <td>45 / 375</td>
-        <td>Done</td>
+        <td><a href="https://github.com/HandeulLy/Dacon/tree/master/1_PredictTemperature">Done</a></td>
     </tr>
     <tr>
         <td>2</td>
-        <td>블럭 장난감 제조 공정 최적화 AI경진대회</td>
+        <td><a href="https://dacon.io/competitions/official/235612/overview/">블럭 장난감 제조 공정 최적화 AI경진대회</a></td>
         <td>19 / 575<br>(as of 24th June)</td>
-        <td>On going</td>
+        <td><a href="https://github.com/HandeulLy/Dacon/tree/master/2_LG_FactoryOptimizing">On going</a></td>
     </tr>
 </table>
+
 <br>
 
 <b>Details.</b>
-
 
 <ol>
     <li>공공 데이터 활용 온도 추정 AI 경진대회</li>
@@ -80,6 +80,8 @@
         <li>Click this <a href="https://dacon.io/competitions/official/235584/overview/">
             URL</a> to get more information about the Competition</li>
         대회에 대한 정보를 확인하려면, 위 링크를 클릭하세요.
+        <li>Click <a href="https://github.com/HandeulLy/Dacon/tree/master/1_PredictTemperature">Here</a> to see what I've done.</li>
+        제가 한 코드들을 확인하려면 여기를 클릭하세요.
         <li>Ranking : 45th place out of 374 teams</li>
         최종 순위는 374팀 중 45등을 기록했습니다.
     </ul>
@@ -89,6 +91,8 @@
         <li>Click this <a href="https://dacon.io/competitions/official/235612/overview/">
             URL</a> to get more information about the Competition</li>
         대회에 대한 정보를 확인하려면, 위 링크를 클릭하세요.
+        <li>Click <a href="https://github.com/HandeulLy/Dacon/tree/master/2_LG_FactoryOptimizing">Here</a> to see what I've done.</li>
+        제가 한 코드들을 확인하려면 여기를 클릭하세요.
         <li>Keep trying to get a high place from the table...</li>
         7월 1일에 대회가 끝나는데, 높은 정확도와 상위 랭크를 위해 계속해서 노력중입니다.
     </ul>

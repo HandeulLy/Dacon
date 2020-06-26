@@ -31,8 +31,13 @@ class Genome():
         self.w8 = np.random.randn(self.hidden_layer3, output_len_2)
         
         # Event 종류
-        self.mask = np.zeros([5], np.bool) # 가능한 이벤트 검사용 마스크
-        self.event_map = {0:'CHECK_1', 1:'CHECK_2', 2:'CHECK_3', 3:'CHECK_4', 4:'PROCESS', 5:'CHANGE_24',6:'CHANGE_14',7:'CHANGE_34'}
+        self.mask = np.zeros([18], np.bool) # 가능한 이벤트 검사용 마스크
+        self.event_map = {0:'CHECK_1', 1:'CHECK_2', 2:'CHECK_3', 3:'CHECK_4',
+                          4:'CHANGE_12', 5:'CHANGE_13', 6:'CHANGE_14',
+                          7:'CHANGE_21', 8:'CHANGE_23', 9:'CHANGE_24', 
+                          10:'CHANGE_31', 11:'CHANGE_32', 12:'CHANGE_34', 
+                          13:'CHANGE_41', 14:'CHANGE_42', 15:'CHANGE_43',
+                          16:'PROCESS', 17:'STOP'}
         
         self.check_time = 28    # 28시간 검사를 완료했는지 검사, CHECK Event시 -1, processtime_time >=98 이면 28
         self.process = 0        # 생산 가능 여부, 0 이면 28 시간 검사 필요
@@ -56,7 +61,7 @@ class Genome():
         net = np.matmul(inputs, self.w1)
         net = self.linear(net)
         net = np.matmul(net, self.w2)
-        net = self.leakyReLU(net)
+        net = self.linear(net)
         net = np.matmul(net, self.w3)
         net = self.sigmoid(net)
         net = np.matmul(net, self.w4)
@@ -69,7 +74,7 @@ class Genome():
         net = np.matmul(inputs, self.w5)
         net = self.linear(net)
         net = np.matmul(net, self.w6)
-        net = self.leakyReLU(net)
+        net = self.linear(net)
         net = np.matmul(net, self.w7)
         net = self.sigmoid(net)
         net = np.matmul(net, self.w8)
@@ -92,7 +97,7 @@ class Genome():
     
     def create_order(self, order):
         for i in range(30):
-            order.loc[91+i,:] = ['0000-00-00', 0, 0, 0, 0]        
+            order.loc[91+i,:] = ['2020-07-01', 0, 0, 0, 0]        
         return order
    
     def predict(self, order):
@@ -100,6 +105,7 @@ class Genome():
         self.submission = submission_ini
         self.submission.loc[:, 'PRT_1':'PRT_4'] = 0
         change_time, change_point = 0, 0
+        stop_time, stop_point = 0, 0
         
         for s in range(self.submission.shape[0]):
             self.update_mask()
@@ -108,61 +114,70 @@ class Genome():
             out1, out2 = self.forward(inputs)
             nextout = ''
             
-            if out1 == 'CHECK_1' and out1 != nextout:
-                if self.process == 1:
-                    self.process = 0
-                    self.check_time = 28
-                self.check_time -= 1
-                self.process_mode = 0
-                if self.check_time == 0:
-                    self.process = 1
-                    self.process_time = 0
-            elif out1 == 'CHECK_2' and out1 != nextout:
-                if self.process == 1:
-                    self.process = 0
-                    self.check_time = 28
-                self.check_time -= 1
-                self.process_mode = 1
-                if self.check_time == 0:
-                    self.process =1
-                    self.process_time = 0
-            elif out1 == 'CHECK_3' and out1 != nextout:
-                if self.process == 1:
-                    self.process = 0
-                    self.check_time = 28
-                self.check_time -= 1
-                self.process_mode = 2
-                if self.check_time == 0:
-                    self.process = 1
-                    self.process_time = 0
-            elif out1 == 'CHECK_4':
-                if self.process == 1:
-                    self.process = 0
-                    self.check_time = 28
-                self.check_time -= 1
-                self.process_mode = 3
-                if self.check_time == 0:
-                    self.process = 1
-                    self.process_time = 0
-            elif out1 == 'CHANGE_24' or out1 == 'CHANGE_14' and out1 != nextout:
-                self.process_time += 13
-                change_time +=13
-                change_point +=1
+            if 'CHECK' in out1 :                
+                if out1[-1] == '1' and out1 != nextout:
+                    if self.process == 1:
+                        self.process = 0
+                        self.check_time = 28
+                    self.check_time -= 1
+                    self.process_mode = 0
+                    if self.check_time == 0:
+                        self.process = 1
+                        self.process_time = 0
+                elif out1[-1] == '2' and out1 != nextout:
+                    if self.process == 1:
+                        self.process = 0
+                        self.check_time = 28
+                    self.check_time -= 1
+                    self.process_mode = 1
+                    if self.check_time == 0:
+                        self.process =1
+                        self.process_time = 0
+                elif out1[-1] == '3' and out1 != nextout:
+                    if self.process == 1:
+                        self.process = 0
+                        self.check_time = 28
+                    self.check_time -= 1
+                    self.process_mode = 2
+                    if self.check_time == 0:
+                        self.process = 1
+                        self.process_time = 0
+                elif out1[-1] == '4':
+                    if self.process == 1:
+                        self.process = 0
+                        self.check_time = 28
+                    self.check_time -= 1
+                    self.process_mode = 3
+                    if self.check_time == 0:
+                        self.process = 1
+                        self.process_time = 0
+                else : pass
+                
+            elif 'CHANGE' in out1 :
+                if out1[-2:] in ['12', '21', '34', '43'] and out1 != nextout :
+                    self.process_time += 6
+                    change_time += 6
+                    change_point += 1
+                elif out1[-2:] in ['13', '14', '23', '24', '31', '32', '41', '42'] and out1 != nextout :
+                    self.process_time += 13
+                    change_time += 13
+                    change_point += 1
+                else : pass
+                
                 if self.process_time == 140:
-                    self.process = 0
-                    self.check_time = 28
-            elif out1 == 'CHANGE_34' and out1 != nextout:
-                self.process_time += 6
-                change_time +=6
-                change_point +=1
-                if self.process_time == 140:
-                    self.process = 0
-                    self.check_time = 28
+                        self.process = 0
+                        self.check_time = 28
+                        
             elif out1 == 'PROCESS':
                 self.process_time += 1
                 if self.process_time == 140:
                     self.process = 0
                     self.check_time = 28
+            
+            elif out1 == 'STOP' : 
+                self.process_mode = 0
+                stop_time += 1
+                stop_point += 1
 
             self.submission.loc[s, 'Event_A'] = out1
             if self.submission.loc[s, 'Event_A'] == 'PROCESS':

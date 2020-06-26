@@ -178,8 +178,7 @@ class Simulator:
                 previous_event[machine] = row[1][f'Event_{machine}']
         return change_time, change_num, stop_time, stop_num
         
-    def cal_score(self):
-        
+    def cal_score(self):        
         p = 0
         q = 0
         for item in self.blk_diffs:

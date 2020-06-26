@@ -1,4 +1,4 @@
-# HDLY
+# MH
 
 import os
 import pandas as pd
@@ -8,7 +8,7 @@ from pathlib import Path
 
 class Simulator:
     def __init__(self):
-        self.sample_submission = pd.read_csv(os.path.join(Path(__file__).resolve().parent, 'sample_submission.csv'))
+        self.sample_submission = pd.read_csv(os.path.join(Path(__file__).resolve().parent, 'submission.csv'))
         self.max_count = pd.read_csv(os.path.join(Path(__file__).resolve().parent, 'max_count.csv'))
         self.stock = pd.read_csv(os.path.join(Path(__file__).resolve().parent, 'stock.csv'))
         order = pd.read_csv(os.path.join(Path(__file__).resolve().parent, 'order.csv'), index_col=0)   
@@ -40,28 +40,28 @@ class Simulator:
                 for column in columns:
                     set_num = df_set.loc[time, column]
                     if set_num > 0:
-                        out_num = np.sum( np.random.choice( 2, int(set_num), replace=True, p=[1-p, p] ) )
+                        out_num = np.sum(np.random.choice(2, set_num, p=[1-p, p]))         
                         df_out.loc[out_time, column] = out_num
 
         df_out['MOL_1'] = 0.0
         df_out['MOL_2'] = 0.0
         df_out['MOL_3'] = 0.0
         df_out['MOL_4'] = 0.0
-        
         df_out['BLK_1'] = 0.0
         df_out['BLK_2'] = 0.0
         df_out['BLK_3'] = 0.0
         df_out['BLK_4'] = 0.0
-        
         return df_out    
     
     def cal_schedule_part_2(self, df, line='A'):
-        if line == 'B':
+        if line == 'A':
+            columns = ['Event_A', 'MOL_A']
+        elif line == 'B':
             columns = ['Event_B', 'MOL_B']
         else:
             columns = ['Event_A', 'MOL_A']
             
-        schedule = df[columns].copy()
+        schedule = df[columns]
         
         schedule['state'] = 0
         schedule['state'] = schedule[columns[0]].apply(lambda x: self.get_state(x))
@@ -70,12 +70,10 @@ class Simulator:
         
         schedule_process = schedule.loc[schedule[columns[0]]=='PROCESS']
         df_out = schedule.drop(schedule.columns, axis=1)
-        
         df_out['PRT_1'] = 0.0
         df_out['PRT_2'] = 0.0
         df_out['PRT_3'] = 0.0
         df_out['PRT_4'] = 0.0
-        
         df_out['MOL_1'] = 0.0
         df_out['MOL_2'] = 0.0
         df_out['MOL_3'] = 0.0
@@ -95,7 +93,6 @@ class Simulator:
         df_out['BLK_2'] = 0.0
         df_out['BLK_3'] = 0.0
         df_out['BLK_4'] = 0.0
-        
         return df_out
 
     def cal_stock(self, df, df_order):
@@ -152,16 +149,15 @@ class Simulator:
         return df_stock, blk_diffs    
 
     def subprocess(self, df):
-        out = df.copy()
         column = 'time'
 
-        out.index = pd.to_datetime(out[column])
-        out = out.drop([column], axis=1)
-        out.index.name = column
-        return out
+        df.index = pd.to_datetime(df[column])
+        df = df.drop([column], axis=1)
+        df.index.name = column
+        return df
     
     def add_stock(self, df, df_stock):
-        df_out = df.copy()
+        df_out = df
         for column in df_out.columns:
             df_out.iloc[0][column] = df_out.iloc[0][column] + df_stock.iloc[0][column]
         return df_out
@@ -176,25 +172,25 @@ class Simulator:
         return df_rescale
 
     def cal_score(self, blk_diffs):
-        # Block Order Difference
+    # Block Order Difference
         blk_diff_m = 0
         blk_diff_p = 0
         for item in blk_diffs:
-            if item < 0:
-                blk_diff_m = blk_diff_m + abs(item)
-            if item > 0:
-                blk_diff_p = blk_diff_p + abs(item)
-        score = blk_diff_m + blk_diff_p
-        return score
+            if item < 0: # blk_diff_m = 부족분
+                blk_diff_m += abs(item)
+            if item > 0: # blk_diff_m = 초과분
+                blk_diff_p += abs(item)
+        return blk_diff_m + blk_diff_p
     
     def get_score(self, df):
         df = self.subprocess(df) 
         out_1 = self.cal_schedule_part_1(df)
         out_2 = self.cal_schedule_part_2(df, line='A')
         out_3 = self.cal_schedule_part_2(df, line='B')
-        out = out_1 + out_2 + out_3
+        out = out_1 + out_2 + out_3 #시간?
         out = self.add_stock(out, self.stock)
         order = self.order_rescale(out, self.order)                    
+        print(order)
         out, blk_diffs = self.cal_stock(out, order)                    
         score = self.cal_score(blk_diffs) 
         return score, out
