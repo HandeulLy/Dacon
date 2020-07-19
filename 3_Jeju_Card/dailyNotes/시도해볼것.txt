@@ -1,0 +1,9 @@
+# 취소/단골
+df['gap']= df['CNT'] - df['CSTMR_CNT']
+df.loc[df['gap'] <0,'mark'] = '취소있음'
+df.loc[df['gap'] ==0,'mark'] = '고객다양'
+df.loc[df['gap'] >0,'mark'] = '단골있음'
+
+이렇게 하면 mark가 높게 나옴(feature 의미 있어 보임)
+
+단, gap을 drop 해야 함
