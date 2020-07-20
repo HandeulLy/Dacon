@@ -30,14 +30,25 @@
 
   <font color=grey>신용카드 사용 내역 데이터를 활용한 지역별, 업종별 월간 카드 사용 총액 예측</font>
 
-- **Hosting : LG Science Park. & Supervising, DACON.**
+- **[Hosting]**
 
+  **LG Science Park. & Supervising, DACON.**
+  
   <font color=grey>주최 : Jeju Government & Jeju Techno Park</font>
   
-- **Supervising : DACON**
+- **[Supervising]**
 
+  **DACON**
+  
   <font color=grey>주관 : DACON</font>
   
   
 
 <br><hr>
+
+
+
+# Daily Records
+
+<a href='https://github.com/HandeulLy/Dacon/tree/master/3_Jeju_Card/dailyNotes'>Notes</a>
+
